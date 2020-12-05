@@ -1,7 +1,7 @@
-mod day_one;
-mod day_two;
+pub mod days;
 
 fn main() {
-    // day_one::answer_day_one();
-    day_two::answer_day_two();
+    // days::day_one::answer_day_one();
+    // days::day_two::answer_day_two();
+    days::day_three::answer_day_three();
 }

@@ -37,7 +37,7 @@ fn product_of_threes(numbers: &Vec<i32>) -> i32 {
 }
 
 pub fn answer_day_one() {
-    let contents = fs::read_to_string("resources/day1.txt").expect("File can't be opened!");
+    let contents = fs::read_to_string("../../resources/day1.txt").expect("File can't be opened!");
     let numbers = contents
         .split('\n')
         .into_iter()
