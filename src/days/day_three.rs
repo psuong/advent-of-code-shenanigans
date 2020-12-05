@@ -3,6 +3,15 @@ use std::collections::HashSet;
 
 const TREE: char = '#';
 
+fn are_tasks_finished(states : &Vec<bool>)-> bool {
+    for state in states {
+        if !state {
+            return false
+        }
+    }
+    true
+}
+
 pub fn answer_day_three() {
     if let Ok(lines) = read_lines("resources/day3.txt") {
         let mut coordinate_set: HashSet<(i64, i64)> = HashSet::new();
@@ -23,7 +32,6 @@ pub fn answer_day_three() {
                 if c == TREE {
                     let coordinate = (x, line_number as i64);
 
-                    println!("Added: {}, {}", coordinate.0, coordinate.1);
                     coordinate_set.insert(coordinate);
                 }
                 x += 1
@@ -32,24 +40,39 @@ pub fn answer_day_three() {
             total_lines += 1;
         }
 
-        let mut y : i64 = 0;
-        let mut x : i64 = 0;
 
-        let mut tree_instances = 0;
+        let slopes                                    = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
+        let mut current_coordinates : Vec<(i64, i64)> = vec![(0, 0), (0, 0), (0, 0), (0, 0), (0, 0)];
+        let mut task_states : Vec<bool>               = vec![false, false, false, false, false];
+        let mut tree_counts : Vec<i32>                = vec![0, 0, 0, 0, 0];
 
-        println!("Total lines {}", total_lines);
+        while !are_tasks_finished(&task_states) {
+            for i in 0..current_coordinates.len() {
+                let slope = slopes[i];
+                let mut vec2 = current_coordinates[i];
 
-        while y < total_lines {
-            x = (x + 3) % line_length;
-            y += 1;
+                if vec2.1 < total_lines {
+                    vec2.0 = (vec2.0 + slope.0) % line_length;
+                    vec2.1 += slope.1;
 
-            let coordinate = (x, y);
+                    if coordinate_set.contains(&vec2) {
+                        tree_counts[i] += 1;
+                    }
 
-            if coordinate_set.contains(&coordinate) {
-                tree_instances += 1;
+                    current_coordinates[i] = vec2;
+                } else {
+                    task_states[i] = true
+                }
             }
         }
 
-        println!("# of trees: {}", tree_instances);
+        let mut product = 1;
+
+        for i in 0..tree_counts.len() {
+            println!{"At {}, the # of trees are: {}", i, tree_counts.get(i).unwrap() };
+            product *= tree_counts.get(i).unwrap();
+        }
+
+        println!("Trees Multiplied: {}", product);
     }
 }
